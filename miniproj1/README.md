@@ -99,4 +99,4 @@ Fun fact, relax na tym starym procesorze kręci jakieś cuda typu: `645056 runs,
 Na starym debianie musiałem kompilować z gcc, bo clang działa tak sobie.
 
 
-Fence rozwiązuje wszystkie problemy: `std::atomic_thread_fence(std::memory_order_seq_cst);`
+Fence rozwiązuje wszystkie problemy: `std::atomic_thread_fence(std::memory_order_seq_cst);` lub `asm volatile("" ::: "memory");`
