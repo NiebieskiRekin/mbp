@@ -91,3 +91,12 @@ Dla relaxed:
 ```
 13911497 runs, i=j=0 count: 461674
 ```
+
+
+Z ciekawości uruchomiłem też na vmce na starszym procesorze
+Na 2 vCPU działa tak, że nigdy nie ma i=j=0, ale na 4 vCPU już się pojawiają. `369025 runs, i=j=0 count 156` (0,000422736)
+Fun fact, relax na tym starym procesorze kręci jakieś cuda typu: `645056 runs, i=j=0 count: 587151` czyli jakieś 90% to i=j=0 xd
+Na starym debianie musiałem kompilować z gcc, bo clang działa tak sobie.
+
+
+Fence rozwiązuje wszystkie problemy: `std::atomic_thread_fence(std::memory_order_seq_cst);`
