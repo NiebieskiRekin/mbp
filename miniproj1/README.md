@@ -100,3 +100,25 @@ Na starym debianie musiałem kompilować z gcc, bo clang działa tak sobie.
 
 
 Fence rozwiązuje wszystkie problemy: `std::atomic_thread_fence(std::memory_order_seq_cst);` lub `asm volatile("" ::: "memory");`
+
+
+```bash
+g++ -O3 benchmark_reordering.cpp -o bm_test -lbenchmark -lpthread
+```
+
+```
+2026-03-15T00:25:35+01:00
+Running ./bm_test
+Run on (12 X 1111.72 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x6)
+  L1 Instruction 32 KiB (x6)
+  L2 Unified 512 KiB (x6)
+  L3 Unified 16384 KiB (x1)
+Load Average: 0.45, 0.52, 0.55
+--------------------------------------------------------------------------------------
+Benchmark                            Time             CPU   Iterations UserCounters...
+--------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time        351 ns          350 ns      1996351 Reorder_Count=1.08742M
+BM_WithBarrier/real_time           377 ns          376 ns      1650937 Reorder_Count=0
+```
