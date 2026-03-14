@@ -1,3 +1,4 @@
+#include <atomic>
 #include <cstddef>
 #include <cstdint>
 #include <exception>
@@ -25,6 +26,7 @@ void *t1(void *) {
   while (true) {
     pthread_barrier_wait(&barrier);
     x = 1;
+    std::atomic_thread_fence(std::memory_order_seq_cst);
     i = y;
     pthread_barrier_wait(&barrier);
   }
@@ -35,6 +37,7 @@ void *t2(void *) {
   while (true) {
     pthread_barrier_wait(&barrier);
     y = 1;
+    std::atomic_thread_fence(std::memory_order_seq_cst);
     j = x;
     pthread_barrier_wait(&barrier);
   }

@@ -29,6 +29,7 @@ void *t1(void *) {
       ;
 
     x.store(1, std::memory_order_relaxed);
+    std::atomic_thread_fence(std::memory_order_seq_cst);
     i = y.load(std::memory_order_relaxed);
 
     // Signal we are done with this iteration
@@ -49,6 +50,7 @@ void *t2(void *) {
       ;
 
     y.store(1, std::memory_order_relaxed);
+    std::atomic_thread_fence(std::memory_order_seq_cst);
     j = x.load(std::memory_order_relaxed);
 
     // Signal we are done with this iteration
