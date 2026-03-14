@@ -1,0 +1,14 @@
+[
+  {
+    "file": "main.cpp",
+    "arguments": [
+      "clang++",
+      "-O3",
+      "-o",
+      "main",
+      "main.cpp"
+    ],
+    "directory": "miniproj1/cpp",
+    "output": "main"
+  }
+]
