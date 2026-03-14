@@ -75,3 +75,19 @@ StoreLoad reordering
 
 
 https://cppreference.com/w/c/atomic/memory_order.html
+
+
+Po poprawieniu implementacji korzystając z barier:
+```
+566325 runs, i=j=0 count 202
+```
+Czyli jakieś 4 razy na 10 000 wywołań.
+
+Ale dużo skacze po procesorze, więc pewnie dalej usypia wątki i potencjalnie szereguje wątki jeden po drugim.
+
+
+Dla relaxed:
+
+```
+13911497 runs, i=j=0 count: 461674
+```
