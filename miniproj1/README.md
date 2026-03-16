@@ -198,7 +198,24 @@ OS: Fedora 43 Linux ; Linux 6.19.7-200.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC
 
 ```
 
-
+4. Laptop 2:
+```
+================ ARCHITECTURE REPORT (macOS) ================
+Model Name:     MacBook Pro
+Processor:      Apple M1 Pro (Architecture: arm64)
+Total Cores:    8 (Threads: 8)
+Byte Order:     Little Endian
+--------------------------- CACHES ---------------------------
+L1 Data:        64 KiB
+L1 Instruction: 128 KiB
+L2 Unified:     4 MiB
+L3 Cache:       Unified System Level Cache (SLC)
+-------------------------- SOFTWARE --------------------------
+OS Version:     macOS 15.7.2 (Build 24G325)
+Kernel:         Darwin 24.6.0 Darwin Kernel Version 24.6.0: Wed Oct 15 21:12:06 PDT 2025; root:xnu-11417.140.69.703.14~1/RELEASE_ARM64_T6000 arm64
+Memory (RAM):   16 GB
+==============================================================
+```
 
 
 Zjawisko inaczej nazywane: StoreLoad reordering
@@ -275,3 +292,30 @@ BM_WithoutBarrier/real_time        232 ns          232 ns      2426015 Reorder_C
 BM_WithBarrier/real_time           309 ns          309 ns      2099201 Reorder_Count=0
 ```
 
+```
+Laptop 2.
+Unable to determine clock rate from sysctl: hw.cpufrequency: No such file or directory
+This does not affect benchmark measurements, only the metadata output.
+***WARNING*** Failed to set thread affinity. Estimated CPU frequency may be incorrect.
+2026-03-16T19:17:44+01:00
+Running ./bm_test
+Run on (8 X 24 MHz CPU s)
+CPU Caches:
+  L1 Data 64 KiB
+  L1 Instruction 128 KiB
+  L2 Unified 4096 KiB (x8)
+Load Average: 2.28, 2.65, 2.63
+--------------------------------------------------------------------------------------
+Benchmark                            Time             CPU   Iterations UserCounters...
+--------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time        274 ns          273 ns      2435078 Reorder_Count=2.43485M
+BM_WithBarrier/real_time           306 ns          306 ns      1731043 Reorder_Count=0
+```
+
+| Maszyna | Procesor | Częstotliwość anomalii | Przepustowość (Bez synchronizacji) | Przepustowość (Z synchronizacją) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Laptop 1** | AMD Ryzen 5 5600U | **54,47%** | 2,85 M-ops/s | 2,65 M-ops/s |
+| **Desktop 1** | AMD Ryzen 9 9900X | **96,88%** | 4,31 M-ops/s | 3,24 M-ops/s |
+| **Laptop 2** | Apple M1 Pro (Apple) | **99,99%** | 3,65 M-ops/s | 3,27 M-ops/s |
+
+![img.png](img.png)
