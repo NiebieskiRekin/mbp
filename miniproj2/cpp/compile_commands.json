@@ -1,0 +1,26 @@
+[
+  {
+    "file": "src/main.cpp",
+    "arguments": [
+      "clang++",
+      "-O3",
+      "-o",
+      "main",
+      "main.cpp"
+    ],
+    "directory": "miniproj1/cpp",
+    "output": "build/main"
+  },
+  {
+    "file": "src/relaxed_spin_lock.cpp",
+    "arguments": [
+      "clang++",
+      "-O3",
+      "-o",
+      "relaxed",
+      "relaxed_spin_lock.cpp"
+    ],
+    "directory": "miniproj1/cpp",
+    "output": "build/relaxed"
+  }
+]
