@@ -29,6 +29,7 @@ void *t1_worker(void *arg) {
       f.store(true, std::memory_order_relaxed);
     }
     else if constexpr (M == Mode::PARTIAL) {
+      std::atomic_signal_fence(std::memory_order_acq_rel);
       f.store(true, std::memory_order_release);
     }
     else {
