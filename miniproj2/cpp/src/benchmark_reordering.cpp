@@ -13,10 +13,10 @@ std::atomic<uint64_t> x_was_zero{0};
 std::atomic<int> run_state{0};
 std::atomic<int> done_count{0};
 
-void *t1_worker(void *arg) {
-  // Odczytujemy, czy w tym teście używamy bariery sprzętowej
-  bool with_fence = (bool)(uintptr_t)arg;
+bool with_full_fence = false;
+bool with_partial_fence = false;
 
+void *t1_worker(void *arg) {
   while (true) {
     int state = 0;
     // Czekaj na sygnał startu (1) lub zakończenia (2)
@@ -27,13 +27,17 @@ void *t1_worker(void *arg) {
 
     x.store(1, std::memory_order_relaxed);
 
-    if (with_fence) {
+    if (with_full_fence) {
       std::atomic_thread_fence(std::memory_order_seq_cst);
     } else {
       std::atomic_signal_fence(std::memory_order_acq_rel);
     }
 
-    f.store(true, std::memory_order_relaxed);
+    if (with_partial_fence) {
+        f.store(true, std::memory_order_release);
+    } else {
+        f.store(true, std::memory_order_relaxed);
+    }
 
     // Zgłoś gotowość po wykonaniu sekcji krytycznej
     done_count.fetch_add(1, std::memory_order_release);
@@ -50,8 +54,6 @@ void *t1_worker(void *arg) {
 }
 
 void *t2_worker(void *arg) {
-  bool with_fence = (bool)(uintptr_t)arg;
-
   while (true) {
     int state = 0;
     while ((state = run_state.load(std::memory_order_acquire)) == 0)
@@ -61,10 +63,13 @@ void *t2_worker(void *arg) {
 
     y.store(1, std::memory_order_relaxed);
 
-    while(!f.load(std::memory_order_relaxed))
-      ;
+    if (with_partial_fence) {
+        while(!f.load(std::memory_order_acquire));
+    } else {
+        while(!f.load(std::memory_order_relaxed));
+    }
 
-    if (with_fence) {
+    if (with_full_fence) {
       std::atomic_thread_fence(std::memory_order_seq_cst);
     } else {
       std::atomic_signal_fence(std::memory_order_acq_rel);
@@ -87,16 +92,17 @@ void *t2_worker(void *arg) {
 }
 
 // Główny silnik zarządzający testem
-static void RunReorderTest(benchmark::State &state, bool with_fence) {
+static void RunReorderTest(benchmark::State &state, bool full, bool partial) {
   // Reset stanu początkowego dla nowej grupy testów
   run_state.store(0, std::memory_order_relaxed);
   done_count.store(0, std::memory_order_relaxed);
   x_was_zero.store(0, std::memory_order_relaxed);
 
   pthread_t pth1, pth2;
-  void *arg = (void *)(uintptr_t)with_fence;
-  pthread_create(&pth1, nullptr, t1_worker, arg);
-  pthread_create(&pth2, nullptr, t2_worker, arg);
+  with_full_fence = full;
+  with_partial_fence = partial;
+  pthread_create(&pth1, nullptr, t1_worker, nullptr);
+  pthread_create(&pth2, nullptr, t2_worker, nullptr);
 
   for (auto _ : state) {
     // Reset zmiennych dla iteracji
@@ -127,12 +133,17 @@ static void RunReorderTest(benchmark::State &state, bool with_fence) {
 }
 
 static void BM_WithoutBarrier(benchmark::State &state) {
-  RunReorderTest(state, false);
+  RunReorderTest(state, false, false);
 }
 BENCHMARK(BM_WithoutBarrier)->UseRealTime();
 
+static void BM_WithPartialBarrier(benchmark::State &state) {
+  RunReorderTest(state, false, true);
+}
+BENCHMARK(BM_WithPartialBarrier)->UseRealTime();
+
 static void BM_WithBarrier(benchmark::State &state) {
-  RunReorderTest(state, true);
+  RunReorderTest(state, true, false);
 }
 BENCHMARK(BM_WithBarrier)->UseRealTime();
 
