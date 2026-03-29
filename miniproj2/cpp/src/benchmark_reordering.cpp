@@ -3,8 +3,9 @@
 #include <cstdint>
 #include <pthread.h>
 
-std::atomic<int> x{0}, y{0};
-int i, j;
+alignas(64) std::atomic<int> x{0}, y{0};
+alignas(64) std::atomic<bool> f{false};
+std::atomic<uint64_t> x_was_zero{0};
 
 // 0 = Czekaj na start rundy
 // 1 = Wykonaj zasadniczne przetwarzanie wątku
@@ -32,7 +33,7 @@ void *t1_worker(void *arg) {
       std::atomic_signal_fence(std::memory_order_acq_rel);
     }
 
-    i = y.load(std::memory_order_relaxed);
+    f.store(true, std::memory_order_relaxed);
 
     // Zgłoś gotowość po wykonaniu sekcji krytycznej
     done_count.fetch_add(1, std::memory_order_release);
@@ -60,13 +61,18 @@ void *t2_worker(void *arg) {
 
     y.store(1, std::memory_order_relaxed);
 
+    while(!f.load(std::memory_order_relaxed))
+      ;
+
     if (with_fence) {
       std::atomic_thread_fence(std::memory_order_seq_cst);
     } else {
       std::atomic_signal_fence(std::memory_order_acq_rel);
     }
 
-    j = x.load(std::memory_order_relaxed);
+    if (x.load(std::memory_order_relaxed) == 0) {
+      x_was_zero.fetch_add(1, std::memory_order_relaxed);
+    }
 
     done_count.fetch_add(1, std::memory_order_release);
 
@@ -85,7 +91,7 @@ static void RunReorderTest(benchmark::State &state, bool with_fence) {
   // Reset stanu początkowego dla nowej grupy testów
   run_state.store(0, std::memory_order_relaxed);
   done_count.store(0, std::memory_order_relaxed);
-  uint64_t both_zero_count = 0;
+  x_was_zero.store(0, std::memory_order_relaxed);
 
   pthread_t pth1, pth2;
   void *arg = (void *)(uintptr_t)with_fence;
@@ -96,8 +102,7 @@ static void RunReorderTest(benchmark::State &state, bool with_fence) {
     // Reset zmiennych dla iteracji
     x.store(0, std::memory_order_relaxed);
     y.store(0, std::memory_order_relaxed);
-    i = 2;
-    j = 2;
+    f.store(false, std::memory_order_relaxed);
     done_count.store(0, std::memory_order_relaxed);
 
     // Start przetwarzania przez wątki
@@ -106,10 +111,6 @@ static void RunReorderTest(benchmark::State &state, bool with_fence) {
     // Oczekiwanie na zakończenie operacji przez wątki
     while (done_count.load(std::memory_order_acquire) != 2)
       ;
-
-    if (i == 0 && j == 0) {
-      both_zero_count++;
-    }
 
     // Koniec iteracji
     run_state.store(0, std::memory_order_release);
@@ -122,7 +123,7 @@ static void RunReorderTest(benchmark::State &state, bool with_fence) {
   pthread_join(pth2, nullptr);
 
   state.counters["Reorder_Count"] =
-      benchmark::Counter(both_zero_count, benchmark::Counter::kDefaults);
+      benchmark::Counter(x_was_zero, benchmark::Counter::kDefaults);
 }
 
 static void BM_WithoutBarrier(benchmark::State &state) {
