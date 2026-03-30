@@ -1,26 +1,26 @@
 [
   {
-    "file": "src/main.cpp",
+    "file": "src/benchmark_reordering_separated.cpp",
     "arguments": [
       "clang++",
       "-O3",
       "-o",
-      "main",
-      "main.cpp"
+      "build/benchmark_reordering_separated",
+      "benchmark_reordering_separated.cpp"
     ],
     "directory": "miniproj1/cpp",
-    "output": "build/main"
+    "output": "build/benchmark_reordering_separated"
   },
   {
-    "file": "src/relaxed_spin_lock.cpp",
+    "file": "src/benchmark_reordering.cpp",
     "arguments": [
       "clang++",
       "-O3",
       "-o",
-      "relaxed",
-      "relaxed_spin_lock.cpp"
+      "build/benchmark_reordering",
+      "benchmark_reordering.cpp"
     ],
     "directory": "miniproj1/cpp",
-    "output": "build/relaxed"
+    "output": "build/benchmark_reordering"
   }
 ]
