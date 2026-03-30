@@ -1,6 +1,9 @@
 [requires]
 benchmark/1.9.5
 
+[tool_requires]
+pkgconf/2.1.0
+
 [generators]
 MesonToolchain
 PkgConfigDeps
