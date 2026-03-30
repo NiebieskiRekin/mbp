@@ -7,8 +7,10 @@ benchmark_dep = dependency('benchmark')
 
 executable('benchmark_reordering',
            'benchmark_reordering.cpp',
-           dependencies: benchmark_dep)
+           dependencies: benchmark_dep,
+           link_args: ['-static-libstdc++'])
 
 executable('benchmark_reordering_separated',
            'benchmark_reordering_separated.cpp',
-           dependencies: benchmark_dep)
+           dependencies: benchmark_dep,
+           link_args: ['-static-libstdc++'])
