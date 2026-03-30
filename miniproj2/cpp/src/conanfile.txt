@@ -1,0 +1,6 @@
+[requires]
+benchmark/1.9.5
+
+[generators]
+MesonToolchain
+PkgConfigDeps
