@@ -22,9 +22,36 @@ Memory (RAM):   16 GB
 ```
 
 ## Kompilacja
+Instalacja Meson, Conan i Ninja
+
 ```bash
-g++ -O3 benchmark_reordering.cpp -o bm_test -lbenchmark -lpthread
+uv venv # python3 -m venv .venv
+source .venv/bin/activate # adjust shell
+uv pip install conan meson ninja
 ```
+
+Instalacja zależności
+```bash
+cd cpp/src
+conan install . --output-folder=../conanbuild --build=missing
+```
+
+Konfiguracja środowiska budowania
+```bash
+meson setup ../mesonbuild --native-file ../conanbuild/conan_meson_native.ini
+```
+
+Kompilacja
+```bash
+meson compile -C ../mesonbuild
+```
+
+Uruchomienie
+```
+../mesonbuild/benchmark_reordering
+../mesonbuild/benchmark_reordering_separated
+```
+
 
 ## Wyniki testów
 1. M1 Pro - `benchmark_reordering_separated.cpp`
