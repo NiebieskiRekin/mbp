@@ -16,7 +16,7 @@ std::atomic<int> done_count{0};
 enum class Mode { NONE, PARTIAL, FULL };
 
 template <Mode M>
-void *t1_worker(void *arg) {
+void *t1_worker([[maybe_unused]] void *arg) {
   while (true) {
     int state = 0;
     while ((state = run_state.load(std::memory_order_acquire)) == 0);
@@ -45,8 +45,7 @@ void *t1_worker(void *arg) {
   return nullptr;
 }
 
-template <Mode M>
-void *t2_worker(void *arg) {
+template <Mode M> void *t2_worker([[maybe_unused]] void *arg) {
   while (true) {
     int state = 0;
     while ((state = run_state.load(std::memory_order_acquire)) == 0);

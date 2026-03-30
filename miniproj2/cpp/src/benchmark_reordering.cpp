@@ -16,7 +16,7 @@ std::atomic<int> done_count{0};
 bool with_full_fence = false;
 bool with_partial_fence = false;
 
-void *t1_worker(void *arg) {
+void *t1_worker([[maybe_unused]] void *arg) {
   while (true) {
     int state = 0;
     // Czekaj na sygnał startu (1) lub zakończenia (2)
@@ -53,7 +53,7 @@ void *t1_worker(void *arg) {
   return nullptr;
 }
 
-void *t2_worker(void *arg) {
+void *t2_worker([[maybe_unused]] void *arg) {
   while (true) {
     int state = 0;
     while ((state = run_state.load(std::memory_order_acquire)) == 0)
