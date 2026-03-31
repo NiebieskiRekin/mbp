@@ -138,6 +138,112 @@ BM_WithPartialBarrier/real_time        436 ns          432 ns    603749475 Reord
 BM_WithFullBarrier/real_time           401 ns          398 ns    582111940 Reorder_Count=0
 ```
 
+4. Ryzen 5 5600U - `benchmark_reordering --benchmark_min_time=300s`
+
+```
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            363 ns          362 ns   1170530947 Reorder_Count=0
+BM_WithPartialBarrier/real_time        384 ns          382 ns   1294999346 Reorder_Count=0
+BM_WithBarrier/real_time               399 ns          397 ns    975169792 Reorder_Count=0
+```
+
+5. Ryzen 5 5600U - `benchmark_reordering_separated --benchmark_min_time=300s`
+
+```
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            415 ns          413 ns   1022387314 Reorder_Count=0
+BM_WithPartialBarrier/real_time        385 ns          383 ns   1001579295 Reorder_Count=0
+BM_WithFullBarrier/real_time           380 ns          379 ns   1037848971 Reorder_Count=0
+```
+
+6. Intel(R) Xeon(R) Gold 6252N (Slurm PMEM) - `benchmark_reordering`
+
+```
+../mesonbuild/benchmark_reordering
+2026-03-30T21:18:51+02:00
+Running ../mesonbuild/benchmark_reordering
+Run on (96 X 3600 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x48)
+  L1 Instruction 32 KiB (x48)
+  L2 Unified 1024 KiB (x48)
+  L3 Unified 36608 KiB (x2)
+Load Average: 0.07, 0.08, 0.03
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            596 ns          596 ns      1164002 Reorder_Count=0
+BM_WithPartialBarrier/real_time        599 ns          599 ns      1169048 Reorder_Count=0
+BM_WithBarrier/real_time               615 ns          615 ns      1139063 Reorder_Count=0
+```
+
+7. Intel(R) Xeon(R) Gold 6252N (Slurm PMEM) - `benchmark_reordering_separated`
+
+```
+../mesonbuild/benchmark_reordering_separated
+2026-03-30T21:19:02+02:00
+Running ../mesonbuild/benchmark_reordering_separated
+Run on (96 X 3600 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x48)
+  L1 Instruction 32 KiB (x48)
+  L2 Unified 1024 KiB (x48)
+  L3 Unified 36608 KiB (x2)
+Load Average: 0.06, 0.08, 0.03
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            624 ns          624 ns      1111804 Reorder_Count=0
+BM_WithPartialBarrier/real_time        631 ns          631 ns      1098909 Reorder_Count=0
+BM_WithFullBarrier/real_time           635 ns          635 ns      1095355 Reorder_Count=0
+```
+
+7. Intel(R) Xeon(R) Gold 6252N (Slurm PMEM) - `benchmark_reordering_separated --benchmark_min_time=60s`
+```
+../mesonbuild/benchmark_reordering --benchmark_min_time=60s 
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            567 ns          567 ns    740247032 Reorder_Count=0
+BM_WithPartialBarrier/real_time        560 ns          560 ns    751059588 Reorder_Count=0
+BM_WithBarrier/real_time               576 ns          576 ns    729456369 Reorder_Count=0
+2026-03-30T21:54:57+02:00
+Running ../mesonbuild/benchmark_reordering
+Run on (96 X 3600 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x48)
+  L1 Instruction 32 KiB (x48)
+  L2 Unified 1024 KiB (x48)
+  L3 Unified 36608 KiB (x2)
+Load Average: 3.00, 2.99, 2.40
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+^Csrun: interrupt (one more within 1 sec to abort)
+```
+
+8. Snapdragon 7 Plus Gen 3 (Android) - `benchmark_reordering --benchmark_min_time=60s`
+
+```
+OP5E93L1:/ $ /data/local/tmp/benchmark_reordering --benchmark_min_time=60s
+2026-03-30T22:27:48+02:00
+Running /data/local/tmp/benchmark_reordering
+Run on (8 X 1900.8 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            606 ns          601 ns    131940818 Reorder_Count=14.442k
+BM_WithPartialBarrier/real_time        581 ns          578 ns    144517433 Reorder_Count=0
+BM_WithBarrier/real_time               610 ns          607 ns    100000000 Reorder_Count=0
+```
+
+9. Snapdragon 7 Plus Gen 3 (Android) - `benchmark_reordering _separated --benchmark_min_time=60s`
+
 
 ## Rezultaty
 | Maszyna       | Procesor | Liczba iteracji | Liczba anomalii | Przepustowość (Bez synchronizacji) | Przepustowość (Częściowa bariera) | Przepustowość (Pełna bariera) |
