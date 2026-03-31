@@ -163,17 +163,6 @@ BM_WithFullBarrier/real_time           380 ns          379 ns   1037848971 Reord
 6. Intel(R) Xeon(R) Gold 6252N (Slurm PMEM) - `benchmark_reordering`
 
 ```
-../mesonbuild/benchmark_reordering
-2026-03-30T21:18:51+02:00
-Running ../mesonbuild/benchmark_reordering
-Run on (96 X 3600 MHz CPU s)
-CPU Caches:
-  L1 Data 32 KiB (x48)
-  L1 Instruction 32 KiB (x48)
-  L2 Unified 1024 KiB (x48)
-  L3 Unified 36608 KiB (x2)
-Load Average: 0.07, 0.08, 0.03
-***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
 ------------------------------------------------------------------------------------------
 Benchmark                                Time             CPU   Iterations UserCounters...
 ------------------------------------------------------------------------------------------
@@ -185,17 +174,6 @@ BM_WithBarrier/real_time               615 ns          615 ns      1139063 Reord
 7. Intel(R) Xeon(R) Gold 6252N (Slurm PMEM) - `benchmark_reordering_separated`
 
 ```
-../mesonbuild/benchmark_reordering_separated
-2026-03-30T21:19:02+02:00
-Running ../mesonbuild/benchmark_reordering_separated
-Run on (96 X 3600 MHz CPU s)
-CPU Caches:
-  L1 Data 32 KiB (x48)
-  L1 Instruction 32 KiB (x48)
-  L2 Unified 1024 KiB (x48)
-  L3 Unified 36608 KiB (x2)
-Load Average: 0.06, 0.08, 0.03
-***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
 ------------------------------------------------------------------------------------------
 Benchmark                                Time             CPU   Iterations UserCounters...
 ------------------------------------------------------------------------------------------
@@ -206,34 +184,17 @@ BM_WithFullBarrier/real_time           635 ns          635 ns      1095355 Reord
 
 7. Intel(R) Xeon(R) Gold 6252N (Slurm PMEM) - `benchmark_reordering_separated --benchmark_min_time=60s`
 ```
-../mesonbuild/benchmark_reordering --benchmark_min_time=60s 
 ------------------------------------------------------------------------------------------
 Benchmark                                Time             CPU   Iterations UserCounters...
 ------------------------------------------------------------------------------------------
 BM_WithoutBarrier/real_time            567 ns          567 ns    740247032 Reorder_Count=0
 BM_WithPartialBarrier/real_time        560 ns          560 ns    751059588 Reorder_Count=0
 BM_WithBarrier/real_time               576 ns          576 ns    729456369 Reorder_Count=0
-2026-03-30T21:54:57+02:00
-Running ../mesonbuild/benchmark_reordering
-Run on (96 X 3600 MHz CPU s)
-CPU Caches:
-  L1 Data 32 KiB (x48)
-  L1 Instruction 32 KiB (x48)
-  L2 Unified 1024 KiB (x48)
-  L3 Unified 36608 KiB (x2)
-Load Average: 3.00, 2.99, 2.40
-***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
-^Csrun: interrupt (one more within 1 sec to abort)
 ```
 
 8. Snapdragon 7 Plus Gen 3 (Android) - `benchmark_reordering --benchmark_min_time=60s`
 
 ```
-OP5E93L1:/ $ /data/local/tmp/benchmark_reordering --benchmark_min_time=60s
-2026-03-30T22:27:48+02:00
-Running /data/local/tmp/benchmark_reordering
-Run on (8 X 1900.8 MHz CPU s)
-***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
 ------------------------------------------------------------------------------------------
 Benchmark                                Time             CPU   Iterations UserCounters...
 ------------------------------------------------------------------------------------------
@@ -242,7 +203,28 @@ BM_WithPartialBarrier/real_time        581 ns          578 ns    144517433 Reord
 BM_WithBarrier/real_time               610 ns          607 ns    100000000 Reorder_Count=0
 ```
 
-9. Snapdragon 7 Plus Gen 3 (Android) - `benchmark_reordering _separated --benchmark_min_time=60s`
+```
+benchmark_reordering --benchmark_min_time=60s
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            566 ns          561 ns    145758479 Reorder_Count=3.103k
+BM_WithPartialBarrier/real_time        571 ns          566 ns    140806610 Reorder_Count=0
+BM_WithBarrier/real_time               662 ns          653 ns    154525611 Reorder_Count=0
+```
+
+
+9. Snapdragon 7 Plus Gen 3 (Android) - `benchmark_reordering_separated --benchmark_min_time=60s`
+
+```
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            579 ns          577 ns    146461408 Reorder_Count=127
+BM_WithPartialBarrier/real_time        573 ns          571 ns    148949402 Reorder_Count=0
+BM_WithFullBarrier/real_time           583 ns          579 ns    141983254 Reorder_Count=0
+```
+
 
 
 ## Rezultaty
@@ -260,6 +242,8 @@ procesor może łączyć kilka operacji zapisu dotyczących pojedynczej linii Ca
 powodować, że wymuszenie znajdowania się zmiennych w innych liniach "poprawia" częstotliwość występowania anomalii, 
 ponieważ zmienne nie są łączone w jedną linię Cache, co może prowadzić do większej liczby przypadków, 
 gdzie operacje zapisu są widoczne dla innych wątków w różnym czasie.
+
+> ***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
 
 ## Wykresy
 ![img.png](img.png)
