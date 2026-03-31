@@ -21,6 +21,58 @@ Memory (RAM):   16 GB
 ==============================================================
 ```
 
+2. HP 13 Aero (Laptop 2)
+```
+HP Pavilion Aero Laptop 13-be0xxx
+CPU: 
+  Model: AMD Ryzen 5 5600U 
+  Arch:  x86_64
+  Freq:  4,3 Ghz
+  Cores: 6 Cores / 12 Threads / 1 NUMA node
+  Caches:
+    L1d: 192 KiB (6 instances)
+    L1i: 192 KiB (6 instances)
+    L2:  3 MiB (6 instances)
+    L3:  16 MiB (1 instance)
+RAM: 16GiB DDR4 3200 MT/s SODIMM non-ECC Dual-channel
+OS: Fedora Linux 43 ; Linux 6.19.9-200.fc43.x86_64
+```
+
+3. Inspur NF5280M5 (Slurm pmem-4)
+
+```
+CPU: 
+  Model: Intel(R) Xeon(R) Gold 6252N CPU 
+  Arch:  x86_64
+  Freq:  2.30GHz
+  Cores: 2 Sockets / 48 Cores / 96 Threads
+  Caches:
+    L1d: 1.5 MiB (48 instances)
+    L1i: 1.5 MiB (48 instances)
+    L2:  48 MiB (48 instances)
+    L3:  71.5 MiB (2 instances)
+RAM: 192GB PMem DDR4 DIMM (up to 2,666 MT/s)
+OS: openSUSE Leap 15.4 ; Linux 6.0.5-1-default
+Compiler: g++ 13.1.1
+```
+
+4. OnePlus Nord 4 (Android)
+
+```
+CPU: 
+  Model: Qualcomm® Snapdragon™ 7 Plus Gen 3 (Qualcomm SM7675)
+  Arch: arm64-v8a
+  Freq: variable per core 3x1.9 GHz, 4x2.61 GHz, 1x2.8 GHz
+  Cores: 8 core / 8 threads
+  Caches:
+    L1d: 256KB (8 instances)
+    L1i: 256KB (8 instances)
+    L2:  2MB
+    L3:  -
+RAM: 16 GB LPDDR5X
+OS: OxygenOs 16.0.2.401 (Android 16); Linux 6.1.118-android14-11-o-gb04e654755e2
+```
+
 ## Kompilacja
 Instalacja Meson, Conan i Ninja
 
