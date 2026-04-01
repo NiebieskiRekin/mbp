@@ -1,0 +1,25 @@
+Device,Type,Barrier,CPU,Reorder,Iterations
+M1 Pro,separated,Without,441,41,196068699
+M1 Pro,separated,Partial,373,0,212374789
+M1 Pro,separated,Full,377,0,217174315
+M1 Pro,none,Without,392,8,224253793
+M1 Pro,none,Partial,394,0,214398493
+M1 Pro,none,Full,415,0,215988921
+Ryzen 5 5600U,none,Without,362,0,1170530947
+Ryzen 5 5600U,none,Partial,382,0,1294999346
+Ryzen 5 5600U,none,Full,397,0,975169792
+Ryzen 5 5600U,separated,Without,413,0,1022387314
+Ryzen 5 5600U,separated,Partial,383,0,1001579295
+Ryzen 5 5600U,separated,Full,379,0,1037848971
+Xeon Gold 6252N,none,Without,596,0,1164002
+Xeon Gold 6252N,none,Partial,599,0,1169048
+Xeon Gold 6252N,none,Full,615,0,1139063
+Xeon Gold 6252N,separated,Without,567,0,740247032
+Xeon Gold 6252N,separated,Partial,560,0,751059588
+Xeon Gold 6252N,separated,Full,576,0,729456369
+Snapdragon 7+ Gen 3,none,Without,561,3103,145758479
+Snapdragon 7+ Gen 3,none,Partial,566,0,140806610
+Snapdragon 7+ Gen 3,none,Full,653,0,154525611
+Snapdragon 7+ Gen 3,separated,Without,577,127,146461408
+Snapdragon 7+ Gen 3,separated,Partial,571,0,148949402
+Snapdragon 7+ Gen 3,separated,Full,579,0,141983254
