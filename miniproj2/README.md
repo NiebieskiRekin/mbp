@@ -128,7 +128,7 @@ BM_WithPartialBarrier/real_time        395 ns          394 ns    214398493 Reord
 BM_WithBarrier/real_time               416 ns          415 ns    215988921 Reorder_Count=0
 ```
 
-3. M1 Pro - `benchmark_reordering_separated.cpp` (`--benchmark_min_time=180s`)
+3. M1 Pro - `benchmark_reordering_separated.cpp` (`--benchmark_min_time=180s`) **bez `alignas(64)`**
 ```
 ------------------------------------------------------------------------------------------
 Benchmark                                Time             CPU   Iterations UserCounters...
@@ -225,12 +225,17 @@ BM_WithPartialBarrier/real_time        573 ns          571 ns    148949402 Reord
 BM_WithFullBarrier/real_time           583 ns          579 ns    141983254 Reorder_Count=0
 ```
 
+10. Snapdragon 7 Plus Gen 3 (Android) - `benchmark_reordering_separated --benchmark_min_time=60s`
+**bez `alignas(64)`**
 
-
-## Rezultaty
-| Maszyna       | Procesor | Liczba iteracji | Liczba anomalii | Przepustowość (Bez synchronizacji) | Przepustowość (Częściowa bariera) | Przepustowość (Pełna bariera) |
-|:--------------| :--- |:----------------|:----------------| :--- | :--- |:----------------------------------|
-| **Laptop 1**  | Apple M1 Pro | **~224M** | 8               | 2,54 M-ops/s| 2,53 M-ops/s | 2,40 M-ops/s |
+```
+------------------------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations UserCounters...
+------------------------------------------------------------------------------------------
+BM_WithoutBarrier/real_time            576 ns          574 ns    138783006 Reorder_Count=0
+BM_WithPartialBarrier/real_time        633 ns          629 ns    137438076 Reorder_Count=0
+BM_WithFullBarrier/real_time           801 ns          796 ns    111222826 Reorder_Count=0
+```
 
 ## Notki
 
@@ -243,7 +248,9 @@ powodować, że wymuszenie znajdowania się zmiennych w innych liniach "poprawia
 ponieważ zmienne nie są łączone w jedną linię Cache, co może prowadzić do większej liczby przypadków, 
 gdzie operacje zapisu są widoczne dla innych wątków w różnym czasie.
 
+Na niektórych maszynach pojawiał się też komunikat:
 > ***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+Niestety, ale nie wszędzie było możliwe wyłączenie skalowania CPU (wymagane uprawnienia administratora).
 
 ## Wykresy
 ![img.png](img.png)
