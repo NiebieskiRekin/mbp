@@ -3,10 +3,11 @@
 
 /*
 weak fairness admits an execution in
-which thread 1 spins foreve
+which thread 1 spins forever
 */
 
-std::atomic<bool> f{false}, g{false};
+std::atomic<bool> f{false};
+std::atomic<bool> g{false};
 
 /*
 while ¬condition
@@ -29,10 +30,10 @@ int t1(void *) {
   f.load(∥W) = LoadStore -> memory_order_acquire = LoadLoad + LoadStore (||RW)
   */
   while (!f.load(std::memory_order_acquire)) {
-    // StoreStore -> memory_order_release = StoreStore + LoadStore (W||W)
+    // StoreStore -> memory_order_release = StoreStore + LoadStore (RW||W)
     g.store(true, std::memory_order_release);
 
-    // StoreLoad -> memory_order_seq_cst only
+    // StoreLoad -> memory_order_seq_cst = Release (RW||W) + StoreLoad (W||R)
     g.store(false, std::memory_order_seq_cst);
   }
   return 1;
