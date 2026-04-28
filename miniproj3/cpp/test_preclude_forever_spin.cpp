@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <fstream>
+#include <vector>
 
 /*
 weak fairness precludes an execution in
