@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <fstream>
 
 std::atomic<bool> f{false};
 std::atomic<bool> g{false};
@@ -69,11 +70,11 @@ int main() {
         break;
       }
 
-      // 2. Check if the timeout limit (1000 microseconds) has been exceeded
+      // 2. Check if the timeout limit (1 second) has been exceeded
       auto current_time = std::chrono::high_resolution_clock::now();
       auto elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>(current_time - start_time).count();
 
-      if (elapsed_us > 1000) {
+      if (elapsed_us > 1000000) {
         // Trigger the timeout flag to safely terminate the spinning threads
         timeout_flag.store(true, std::memory_order_relaxed);
         break;
@@ -101,7 +102,18 @@ int main() {
             << (static_cast<double>(starvation_count) / num_trials) * 100
             << "%\n";
 
- // TODO: export vector(success_times) to a csv for histogram generation
+ std::cout << "Exporting to results.csv...\n";
+ std::ofstream csv_file("admit_results.csv");
+ if (csv_file.is_open()) {
+   csv_file << "Trial,Latency_us\n";
+   for (size_t i = 0; i < success_times.size(); ++i) {
+     csv_file << i << "," << success_times[i] << "\n";
+   }
+   csv_file.close();
+   std::cout << "Export complete.\n";
+ } else {
+   std::cerr << "Failed to open results.csv for writing.\n";
+ }
 
   return 0;
 }
