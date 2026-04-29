@@ -7,13 +7,10 @@
 
 std::atomic<bool> f{false};
 std::atomic<bool> g{false};
-std::atomic<bool> timeout_flag{false};
 
 void thread_1() {
   // while ¬f.load(||W)
   while (!f.load(std::memory_order_acquire)) {
-    if (timeout_flag.load(std::memory_order_relaxed))
-      return;
 
     // g.store(true, ||W)
     g.store(true, std::memory_order_release);
@@ -26,8 +23,6 @@ void thread_1() {
 void thread_2() {
   // await g.load(||)
   while (!g.load(std::memory_order_relaxed)) {
-    if (timeout_flag.load(std::memory_order_relaxed))
-      return;
   }
 
   // fence(R∥RW)
@@ -50,7 +45,6 @@ int main() {
     // Reset state for the run
     f.store(false, std::memory_order_relaxed);
     g.store(false, std::memory_order_relaxed);
-    timeout_flag.store(false, std::memory_order_relaxed);
 
     // Start timer
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -58,7 +52,6 @@ int main() {
     std::thread t1(thread_1);
     std::thread t2(thread_2);
 
-    bool starved = true;
     long long duration_us = 0;
 
     while (true) {
@@ -66,17 +59,6 @@ int main() {
       if (f.load(std::memory_order_relaxed)) {
         auto end_time = std::chrono::high_resolution_clock::now();
         duration_us = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-        starved = false;
-        break;
-      }
-
-      // 2. Check if the timeout limit (1 second) has been exceeded
-      auto current_time = std::chrono::high_resolution_clock::now();
-      auto elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>(current_time - start_time).count();
-
-      if (elapsed_us > 1000000) {
-        // Trigger the timeout flag to safely terminate the spinning threads
-        timeout_flag.store(true, std::memory_order_relaxed);
         break;
       }
     }
@@ -84,23 +66,12 @@ int main() {
     t1.join();
     t2.join();
 
-    // Record the outcome of this specific trial
-    if (starved) {
-      starvation_count++;
-    } else {
-      success_times.push_back(duration_us);
-    }
+    // Save trial duration
+    success_times.push_back(duration_us);
   }
 
   std::cout << "--------------------------------------\n";
   std::cout << "Total Runs: " << num_trials << "\n";
-  std::cout << "Starvation Events (Infinite Spins): " << starvation_count
-            << "\n";
-  std::cout << "Natural Resolutions: " << (num_trials - starvation_count)
-            << "\n";
-  std::cout << "Starvation Rate: "
-            << (static_cast<double>(starvation_count) / num_trials) * 100
-            << "%\n";
 
  std::cout << "Exporting to results.csv...\n";
  std::ofstream csv_file("admit_results.csv");

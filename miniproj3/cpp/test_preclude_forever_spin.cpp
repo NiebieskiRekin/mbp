@@ -11,12 +11,10 @@ which thread 1 spins forever
 */
 
 std::atomic<bool> f{false};
-std::atomic<bool> timeout_flag{false};
 
 void thread_1() {
   // await f.load(||)
   while (!f.load(std::memory_order_relaxed)) {
-    if (timeout_flag.load(std::memory_order_relaxed)) return;
   }
   // fence(R||RW)
   std::atomic_thread_fence(std::memory_order_acquire);
@@ -25,7 +23,6 @@ void thread_1() {
 void thread_2() {
   // await ¬f.load(||)
   while (f.load(std::memory_order_relaxed)) {
-    if (timeout_flag.load(std::memory_order_relaxed)) return;
   }
   std::atomic_thread_fence(std::memory_order_acquire);
 
@@ -44,7 +41,6 @@ int main() {
 
   for (int i = 0; i < num_trials; ++i) {
     f.store(false, std::memory_order_relaxed);
-    timeout_flag.store(false, std::memory_order_relaxed);
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -62,38 +58,17 @@ int main() {
         starved = false;
         break;
       }
-
-      // 2. Check if the timeout limit (1 second) has been exceeded
-      auto current_time = std::chrono::high_resolution_clock::now();
-      auto elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>(current_time - start_time).count();
-
-      if (elapsed_us > 1000000) {
-        // Trigger the timeout flag to safely terminate the spinning threads
-        timeout_flag.store(true, std::memory_order_relaxed);
-        break;
-      }
     }
 
     t1.join();
     t2.join();
 
-    // Record the outcome of this specific trial
-    if (starved) {
-      starvation_count++;
-    } else {
-      success_times.push_back(duration_us);
-    }
+    // Save trial duration
+    success_times.push_back(duration_us);
   }
 
   std::cout << "--------------------------------------\n";
   std::cout << "Total Runs: " << num_trials << "\n";
-  std::cout << "Starvation Events (Infinite Spins): " << starvation_count
-            << "\n";
-  std::cout << "Natural Resolutions: " << (num_trials - starvation_count)
-            << "\n";
-  std::cout << "Starvation Rate: "
-            << (static_cast<double>(starvation_count) / num_trials) * 100
-            << "%\n";
 
  std::cout << "Exporting to results.csv...\n";
  std::ofstream csv_file("preclude_results.csv");
