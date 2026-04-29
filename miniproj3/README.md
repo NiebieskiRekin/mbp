@@ -29,3 +29,23 @@ Uruchomienie
 ```
 build/meson-x86_64/benchmark_reordering_separated
 ```
+
+Bariery w C++
+```
+# R || RW
+          #LoadLoad
+          #LoadStore
+          #memory_order_acquire
+
+# RW || W
+          #LoadStore
+          #StoreStore
+          #memory_order_release
+
+# RW || RW
+          #LoadStore
+          #LoadLoad
+          #StoreStore
+          #StoreLoad
+          #memory_order_seq_cst
+```
