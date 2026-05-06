@@ -15,6 +15,8 @@ void thread_1() {
     // g.store(true, ||W)
     g.store(true, std::memory_order_release);
 
+    for(volatile int i=0; i<10; i++);
+
     // g.store(false, ||R)
     g.store(false, std::memory_order_seq_cst);
   }
