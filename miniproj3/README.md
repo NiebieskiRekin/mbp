@@ -49,3 +49,6 @@ Bariery w C++
           #StoreLoad
           #memory_order_seq_cst
 ```
+
+Mapping kompilacji barier: 
+- https://www.cl.cam.ac.uk/~pes20/cpp/cpp0xmappings.html
